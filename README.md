@@ -102,23 +102,19 @@ or when run manually, and deploys a Flatpak repository to GitHub Pages. Set the
 repository's **Settings > Pages > Source** to **GitHub Actions**. The build
 installs the manifest's SDK from Flathub.
 
-Generate a signing key and configure the repository's Actions secrets, following
-the [mixxx-flatpak instructions](https://github.com/cr7pt0gr4ph7/mixxx-flatpak#forking-this-repository):
+Setting up builds for a fork requires you to setup the following secrets in the repository settings:
 
-1. Invoke `gpg --full-generate-key` and follow the instructions. Write down the
-   ID of the key you generated.
-2. Invoke `gpg --list-secret-keys --keyid-format=long` to determine the ID of
-   your new key, if you haven't already written it down.
-3. Invoke `gpg --armor --export-secret-keys [KEY-ID-OR-EMAIL] | wl-copy` to copy
-   the secret key to the clipboard, and paste it into the `GPG_PRIVATE_KEY`
-   Actions secret. `[KEY-ID-OR-EMAIL]` can be the email address specified in
-   step 1 or a key ID such as `0123456789ABCDEF`. The `wl-copy` command
-   requires a Wayland clipboard.
-4. Set the `GPG_PASSPHRASE` Actions secret to your chosen passphrase, if any.
+- `GPG_PRIVATE_KEY` &mdash; Base64-encoded private GPG key for signing the resulting Flatpak image.
+- `GPG_PUBLIC_KEY` &mdash; Base64-encoded public GPG key for signing the resulting Flatpak image.
+- `GPG_PASSPHRASE` &mdash; Passphrase for the private GPG key.
 
-Keep the same key for subsequent deployments so existing installations can
-verify updates. Unlike mixxx-flatpak, this workflow does not require a
-`GPG_PUBLIC_KEY` secret: Flatter includes the public key in `index.flatpakrepo`.
+Use the following steps to generate the necessary key files (see also the [GitHub Docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key) for related instructions):
+
+1. Invoke `gpg --full-generate-key` and follow the instructions. Write down the ID of the key you generated.
+2. Invoke `gpg --list-secret-keys --keyid-format=long` to determine the ID of your new key, if you haven't already written it down.
+3. Invoke `gpg --armor --export-secret-keys [KEY-ID-OR-EMAIL] | wl-copy` to copy the secret key to the clipboard (for pasting into the GitHub Web UI), and paste as `GPG_PRIVATE_KEY`. `[KEY-ID-OR-EMAIL]` can be either the email address you specified in step 1, or a key id of the form `0123456789ABCDEF`.
+4. Set your chosen passphrase as `GPG_PASSPHRASE`.
+5. Invoke `gpg --export [KEY-ID-OR-EMAIL] | base64 --wrap 0 | wl-copy`, and paste as `GPG_PUBLIC_KEY`.
 
 After a successful deployment, install it with:
 
