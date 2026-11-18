@@ -1,4 +1,4 @@
-app-id: org.audacityteam.Audacity
+app-id: io.github.cr7pt0gr4ph7.Audacity
 runtime: org.kde.Platform
 runtime-version: '6.11'
 sdk: org.kde.Sdk
@@ -86,9 +86,12 @@ modules:
     post-install:
       # Fix-ups for the upstream AppImage-oriented desktop file / metainfo
       - desktop-file-edit --set-key=Name --set-value=Audacity --set-key=Exec --set-value="audacity %F" /app/share/applications/org.audacityteam.Audacity.desktop
-      - sed -i 's|>audacity.desktop<|>org.audacityteam.Audacity.desktop<|' /app/share/metainfo/org.audacityteam.Audacity.appdata.xml
+      - mv /app/share/applications/org.audacityteam.Audacity.desktop /app/share/applications/io.github.cr7pt0gr4ph7.Audacity.desktop
+      - sed -i 's|<id>org.audacityteam.Audacity</id>|<id>io.github.cr7pt0gr4ph7.Audacity</id>|' /app/share/metainfo/org.audacityteam.Audacity.appdata.xml
+      - sed -i 's|>audacity.desktop<|>io.github.cr7pt0gr4ph7.Audacity.desktop<|' /app/share/metainfo/org.audacityteam.Audacity.appdata.xml
       # Flathub requires a screenshot; upstream ships none
       - sed -i '/<url type="homepage">/i\  <screenshots><screenshot type="default"><image>https://raw.githubusercontent.com/flathub/org.audacityteam.Audacity/refs/heads/master/screenshots/main-window.jpg</image><caption>Main Window</caption></screenshot></screenshots>' /app/share/metainfo/org.audacityteam.Audacity.appdata.xml
+      - mv /app/share/metainfo/org.audacityteam.Audacity.appdata.xml /app/share/metainfo/io.github.cr7pt0gr4ph7.Audacity.appdata.xml
       - mv /app/bin/audacity /app/bin/audacity.bin
       - install -Dm755 ../audacity.sh /app/bin/audacity
       - install -d /app/extensions/Plugins

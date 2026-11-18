@@ -47,7 +47,7 @@ Details worth knowing
   - the desktop entry is named "Audacity 4 Portable" upstream, set to
     "Audacity", and `Exec` uses `%F` so files are passed as paths
   - the metainfo `launchable` points to `audacity.desktop`, fixed to
-    `org.audacityteam.Audacity.desktop`
+    `io.github.cr7pt0gr4ph7.Audacity.desktop`
   - upstream ships no screenshot (mandatory for Flathub), so one is injected,
     pointing to `screenshots/main-window.jpg` in this repository
   - the `sed` calls run before the builder renames `.appdata.xml` to
@@ -87,11 +87,11 @@ Building locally
 ```
 flatpak install --user flathub org.kde.Sdk//6.11 org.flatpak.Builder
 flatpak run org.flatpak.Builder --user --force-clean --install-deps-from=flathub \
-  --repo=repo build org.audacityteam.Audacity.yaml
-flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest org.audacityteam.Audacity.yaml
+  --repo=repo build io.github.cr7pt0gr4ph7.Audacity.yaml
+flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest io.github.cr7pt0gr4ph7.Audacity.yaml
 flatpak build-update-repo repo
 flatpak remote-add --user --no-gpg-verify local repo
-flatpak install --user local org.audacityteam.Audacity
+flatpak install --user local io.github.cr7pt0gr4ph7.Audacity
 ```
 
 Publishing
@@ -121,7 +121,7 @@ After a successful deployment, install it with:
 ```
 flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak remote-add --user audacity-pages https://cr7pt0gr4ph7.github.io/org.audacityteam.Audacity/index.flatpakrepo
-flatpak install --user audacity-pages org.audacityteam.Audacity
+flatpak install --user audacity-pages io.github.cr7pt0gr4ph7.Audacity
 ```
 
 If `audacity-pages` was previously added without signature verification,
