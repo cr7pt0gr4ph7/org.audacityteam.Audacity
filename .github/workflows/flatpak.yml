@@ -36,7 +36,7 @@ jobs:
       - name: Build Flatpak repository
         uses: andyholmes/flatter@ba9d3856bb0e59b43ba4684fe72128003f1b7706 # main
         with:
-          files: org.audacityteam.Audacity.yaml
+          files: io.github.cr7pt0gr4ph7.Audacity.yaml
           gpg-sign: ${{ steps.gpg.outputs.fingerprint }}
           flatpak-builder-args: |
             --install-deps-from=flathub
