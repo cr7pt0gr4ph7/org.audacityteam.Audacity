@@ -120,8 +120,8 @@ After a successful deployment, install it with:
 
 ```
 flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak remote-add --user audacity-pages https://cr7pt0gr4ph7.github.io/org.audacityteam.Audacity/index.flatpakrepo
-flatpak install --user audacity-pages io.github.cr7pt0gr4ph7.Audacity
+flatpak remote-add --user audacity-flatpak https://cr7pt0gr4ph7.github.io/org.audacityteam.Audacity/index.flatpakrepo
+flatpak install --user audacity-flatpak io.github.cr7pt0gr4ph7.Audacity
 ```
 
 If `audacity-pages` was previously added without signature verification,
