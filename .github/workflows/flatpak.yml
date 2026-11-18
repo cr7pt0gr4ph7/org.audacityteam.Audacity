@@ -1,0 +1,57 @@
+name: Publish Flatpak
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flatpak-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/andyholmes/flatter/kde:6.10
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Import signing key
+        id: gpg
+        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Require signing key
+        env:
+          GPG_FINGERPRINT: ${{ steps.gpg.outputs.fingerprint }}
+        run: test -n "$GPG_FINGERPRINT"
+
+      - name: Build Flatpak repository
+        uses: andyholmes/flatter@ba9d3856bb0e59b43ba4684fe72128003f1b7706 # main
+        with:
+          files: org.audacityteam.Audacity.yaml
+          gpg-sign: ${{ steps.gpg.outputs.fingerprint }}
+          flatpak-builder-args: |
+            --install-deps-from=flathub
+          upload-pages-artifact: true
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

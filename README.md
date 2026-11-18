@@ -94,6 +94,36 @@ flatpak remote-add --user --no-gpg-verify local repo
 flatpak install --user local org.audacityteam.Audacity
 ```
 
+Publishing
+----------
+
+The `Publish Flatpak` workflow builds the x86_64 package on pushes to `master`
+or when run manually, and deploys a Flatpak repository to GitHub Pages. Set the
+repository's **Settings > Pages > Source** to **GitHub Actions**. The build
+installs the manifest's SDK from Flathub.
+
+Configure the repository's Actions secrets `GPG_PRIVATE_KEY` with an ASCII-armored
+export of a GPG signing key (`gpg --armor --export-secret-keys FINGERPRINT`)
+and, if the key is protected, `GPG_PASSPHRASE` with its passphrase. Keep the
+same key for subsequent deployments so existing installations can verify
+updates. Flatter signs the repository and includes the public key in
+`index.flatpakrepo`.
+
+After a successful deployment, install it with:
+
+```
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --user audacity-pages https://cr7pt0gr4ph7.github.io/org.audacityteam.Audacity/index.flatpakrepo
+flatpak install --user audacity-pages org.audacityteam.Audacity
+```
+
+If `audacity-pages` was previously added without signature verification,
+enable verification and import the trusted public key before updating:
+
+```
+flatpak remote-modify --user --gpg-import=PUBLIC_KEY_FILE --gpg-verify audacity-pages
+```
+
 Ideas for upstream
 ------------------
 
